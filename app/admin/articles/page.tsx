@@ -1,0 +1,316 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import AdminNav from '@/components/AdminNav';
+import { ArticleItem } from '@/lib/db';
+import { Plus, Edit2, Trash2, X, Check, FileText } from 'lucide-react';
+
+export default function AdminArticlesPage() {
+  const [articles, setArticles] = useState<ArticleItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingArticle, setEditingArticle] = useState<ArticleItem | null>(null);
+
+  const [form, setForm] = useState({
+    title: '',
+    slug: '',
+    category: 'دانشنامه و راهنمای خرید',
+    date: '۱۴۰۳/۰۶/۰۱',
+    author: 'واحد مهندسی نوآوران پنجره سپاهان',
+    image: 'https://arvinpanjereh.com/upload/blog-post/3d5921da-5f6e-47b0-b6da-2739d48f7863.webp',
+    excerpt: '',
+    tags: 'پنجره دوجداره, ترمال بریک, اصفهان',
+    content: '',
+  });
+
+  const fetchArticles = async () => {
+    try {
+      const res = await fetch('/api/admin/articles');
+      const data = await res.json();
+      setArticles(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchArticles();
+  }, []);
+
+  const handleOpenAdd = () => {
+    setEditingArticle(null);
+    setForm({
+      title: '',
+      slug: '',
+      category: 'دانشنامه و راهنمای خرید',
+      date: new Intl.DateTimeFormat('fa-IR').format(new Date()),
+      author: 'واحد مهندسی نوآوران پنجره سپاهان',
+      image: 'https://arvinpanjereh.com/upload/blog-post/3d5921da-5f6e-47b0-b6da-2739d48f7863.webp',
+      excerpt: '',
+      tags: 'پنجره دوجداره, ترمال بریک, اصفهان',
+      content: '',
+    });
+    setModalOpen(true);
+  };
+
+  const handleOpenEdit = (article: ArticleItem) => {
+    setEditingArticle(article);
+    setForm({
+      title: article.title,
+      slug: article.slug,
+      category: article.category,
+      date: article.date,
+      author: article.author,
+      image: article.image,
+      excerpt: article.excerpt,
+      tags: article.tags?.join(', ') || '',
+      content: article.content,
+    });
+    setModalOpen(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('آیا از حذف این مقاله اطمینان دارید؟')) return;
+    try {
+      await fetch(`/api/admin/articles?id=${id}`, { method: 'DELETE' });
+      setArticles(articles.filter((a) => a.id !== id));
+    } catch (e) {
+      alert('خطا در حذف مقاله');
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const payload = {
+      ...form,
+      tags: form.tags.split(',').map((t) => t.trim()).filter(Boolean),
+    };
+
+    try {
+      if (editingArticle) {
+        const res = await fetch('/api/admin/articles', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: editingArticle.id, ...payload }),
+        });
+        const updated = await res.json();
+        setArticles(articles.map((a) => (a.id === editingArticle.id ? updated : a)));
+      } else {
+        const res = await fetch('/api/admin/articles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...payload,
+            slug: payload.slug || payload.title.replace(/\s+/g, '-'),
+          }),
+        });
+        const created = await res.json();
+        setArticles([created, ...articles]);
+      }
+      setModalOpen(false);
+    } catch (e) {
+      alert('خطا در ذخیره اطلاعات');
+    }
+  };
+
+  return (
+    <div className="min-h-[85vh] pb-16">
+      <AdminNav />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        {/* Top Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-xl font-bold text-white">مدیریت مقالات و دانشنامه</h1>
+            <p className="text-xs text-titanium-400 mt-1">
+              افزودن، ویرایش و حذف مقالات تخصصی و اخبار مهندسی نما و پنجره
+            </p>
+          </div>
+          <button
+            onClick={handleOpenAdd}
+            className="px-4 py-2.5 rounded-xl bg-bronze-500 hover:bg-bronze-400 text-charcoal-950 font-bold text-xs flex items-center gap-1.5 shadow-md shadow-bronze-500/20"
+          >
+            <Plus className="w-4 h-4 text-charcoal-950" />
+            <span>افزودن مقاله جدید</span>
+          </button>
+        </div>
+
+        {/* Table */}
+        <div className="rounded-2xl bg-charcoal-900 border border-charcoal-800 overflow-hidden shadow-xl">
+          <div className="overflow-x-auto">
+            <table className="w-full text-right text-xs text-titanium-300">
+              <thead className="bg-charcoal-850 text-titanium-400 uppercase font-bold border-b border-charcoal-800">
+                <tr>
+                  <th className="py-3 px-4">عنوان مقاله</th>
+                  <th className="py-3 px-4">دسته‌بندی</th>
+                  <th className="py-3 px-4">تاریخ</th>
+                  <th className="py-3 px-4">نویسنده</th>
+                  <th className="py-3 px-4 text-center">عملیات</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-charcoal-800">
+                {loading ? (
+                  <tr>
+                    <td colSpan={5} className="py-8 text-center text-titanium-500">
+                      در حال بارگذاری مقالات...
+                    </td>
+                  </tr>
+                ) : articles.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="py-8 text-center text-titanium-500">
+                      مقاله‌ای ثبت نشده است.
+                    </td>
+                  </tr>
+                ) : (
+                  articles.map((a) => (
+                    <tr key={a.id} className="hover:bg-charcoal-850/50 transition-colors">
+                      <td className="py-3 px-4 font-semibold text-white max-w-xs truncate">
+                        {a.title}
+                      </td>
+                      <td className="py-3 px-4 text-bronze-400">{a.category}</td>
+                      <td className="py-3 px-4 font-mono">{a.date}</td>
+                      <td className="py-3 px-4">{a.author}</td>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={() => handleOpenEdit(a)}
+                            className="p-1.5 rounded-lg bg-charcoal-800 text-titanium-300 hover:text-white"
+                            title="ویرایش"
+                          >
+                            <Edit2 className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(a.id)}
+                            className="p-1.5 rounded-lg bg-charcoal-800 text-rose-400 hover:text-rose-300"
+                            title="حذف"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal Form */}
+      {modalOpen && (
+        <div className="fixed inset-0 z-50 bg-charcoal-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-charcoal-900 border border-charcoal-700 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-6">
+            <div className="flex items-center justify-between border-b border-charcoal-800 pb-4">
+              <h2 className="text-base font-bold text-white">
+                {editingArticle ? 'ویرایش مقاله' : 'افزودن مقاله جدید'}
+              </h2>
+              <button
+                onClick={() => setModalOpen(false)}
+                className="p-1.5 rounded-lg bg-charcoal-800 text-titanium-400 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+              <div>
+                <label className="text-titanium-300 block mb-1 font-medium">عنوان مقاله:</label>
+                <input
+                  type="text"
+                  required
+                  value={form.title}
+                  onChange={(e) => setForm({ ...form, title: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-charcoal-850 border border-charcoal-700 text-white focus:border-bronze-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-titanium-300 block mb-1 font-medium">دسته‌بندی:</label>
+                  <input
+                    type="text"
+                    value={form.category}
+                    onChange={(e) => setForm({ ...form, category: e.target.value })}
+                    className="w-full p-2.5 rounded-xl bg-charcoal-850 border border-charcoal-700 text-white focus:border-bronze-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-titanium-300 block mb-1 font-medium">نامک (Slug):</label>
+                  <input
+                    type="text"
+                    value={form.slug}
+                    onChange={(e) => setForm({ ...form, slug: e.target.value })}
+                    placeholder="اختیاری (خودکار تولید می‌شود)"
+                    className="w-full p-2.5 rounded-xl bg-charcoal-850 border border-charcoal-700 text-white font-mono focus:border-bronze-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-titanium-300 block mb-1 font-medium">آدرس تصویر شاخص:</label>
+                <input
+                  type="text"
+                  required
+                  value={form.image}
+                  onChange={(e) => setForm({ ...form, image: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-charcoal-850 border border-charcoal-700 text-white font-mono focus:border-bronze-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-titanium-300 block mb-1 font-medium">خلاصه مقاله (Excerpt):</label>
+                <textarea
+                  rows={2}
+                  required
+                  value={form.excerpt}
+                  onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-charcoal-850 border border-charcoal-700 text-white focus:border-bronze-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-titanium-300 block mb-1 font-medium">برچسب‌ها (با کاما جدا کنید):</label>
+                <input
+                  type="text"
+                  value={form.tags}
+                  onChange={(e) => setForm({ ...form, tags: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-charcoal-850 border border-charcoal-700 text-white focus:border-bronze-500 focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="text-titanium-300 block mb-1 font-medium">متن کامل مقاله:</label>
+                <textarea
+                  rows={8}
+                  required
+                  value={form.content}
+                  onChange={(e) => setForm({ ...form, content: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-charcoal-850 border border-charcoal-700 text-white leading-relaxed focus:border-bronze-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4 border-t border-charcoal-800">
+                <button
+                  type="button"
+                  onClick={() => setModalOpen(false)}
+                  className="px-4 py-2 rounded-xl bg-charcoal-800 hover:bg-charcoal-700 text-titanium-300 font-medium"
+                >
+                  انصراف
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 rounded-xl bg-bronze-500 hover:bg-bronze-400 text-charcoal-950 font-bold shadow-md shadow-bronze-500/20"
+                >
+                  ذخیره اطلاعات
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

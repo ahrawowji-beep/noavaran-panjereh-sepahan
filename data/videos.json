@@ -1,0 +1,57 @@
+[
+  {
+    "id": "vid-1",
+    "title": "مکانیزم عملکرد و نحوه باز و بسته شدن پنجره لیفت اند اسلاید (Lift & Slide)",
+    "category": "مقایسه فنی سیستم‌ها",
+    "platform": "aparat",
+    "videoUrl": "https://www.aparat.com/v/k450123",
+    "videoId": "k450123",
+    "duration": "04:15",
+    "thumbnail": "https://arvinpanjereh.com/upload/service/742b5647-017c-4a6e-b416-a184adf97dcc.webp",
+    "description": "در این ویدیوی آموزشی مهندسی، عملکرد بوژی‌های آلمانی و جابجایی فوق روان لنگه پنجره ترمال‌بریک لیفت‌اند‌اسلاید با وزن سنگین شیشه دوجداره بررسی و نمایش داده می‌شود."
+  },
+  {
+    "id": "vid-2",
+    "title": "مراحل گام به گام نصب و آب‌بندی نمای کرتین وال لامل (Curtain Wall Installation)",
+    "category": "آموزش نصب و دیتیل اجرایی",
+    "platform": "youtube",
+    "videoUrl": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "videoId": "dQw4w9WgXcQ",
+    "duration": "08:40",
+    "thumbnail": "https://arvinpanjereh.com/upload/service/96370b3e-eaa9-4bc0-a8b3-aa027dc553b2.webp",
+    "description": "آموزش گام به گام شاغول کردن پروفیل‌های لامل عمودی، نصب ترنزوم‌های افقی، جایگذاری گسکت‌های EPDM و نحوه بستن لقمه‌های نگهدارنده شیشه‌ها با تست نفوذ باران."
+  },
+  {
+    "id": "vid-3",
+    "title": "تست نفوذ آب و عایق صوتی پنجره ترمال‌بریک در آزمایشگاه استاندارد (Decibel Test)",
+    "category": "تست‌های استاندارد و عایق‌بندی",
+    "platform": "aparat",
+    "videoUrl": "https://www.aparat.com/v/p789012",
+    "videoId": "p789012",
+    "duration": "03:50",
+    "thumbnail": "https://arvinpanjereh.com/upload/blog-post/3d5921da-5f6e-47b0-b6da-2739d48f7863.webp",
+    "description": "آزمایش میدانی مهار فرکانس‌های صوتی تا ۳۲ دسی‌بل با شیشه‌های دوجداره لمینت گاز آرگون و رفتار فریم آلومینیوم در فشار معادل طوفان‌های سرعت بالای ۱۰۰ کیلومتر بر ساعت."
+  },
+  {
+    "id": "vid-4",
+    "title": "آموزش ریگلاژ دوره‌ای پنجره‌های دوحالته و تعویض گسکت‌های درزبند",
+    "category": "نگهداری و ریگلاژ",
+    "platform": "aparat",
+    "videoUrl": "https://www.aparat.com/v/m123456",
+    "videoId": "m123456",
+    "duration": "06:20",
+    "thumbnail": "https://arvinpanjereh.com/upload/service/46deae7f-1443-48eb-9751-590cbe9cb3b0.webp",
+    "description": "راهنمای عملی برای کارفرمایان و تکنسین‌های نصب جهت تنظیم پیچ‌های آلن لولای گوشه و زبانه‌های قفل‌کننده اسپانیولت برای تنظیم کیپ‌شدن در فصول سرد و گرم سال."
+  },
+  {
+    "id": "vid-5",
+    "title": "تفاوت پروفیل آلومینیوم ترمال بریک استاندارد با پروفیل‌های متفرقه و غیراستاندارد",
+    "category": "مقایسه فنی سیستم‌ها",
+    "platform": "youtube",
+    "videoUrl": "https://www.youtube.com/watch?v=ScMzIvxBSi4",
+    "videoId": "ScMzIvxBSi4",
+    "duration": "05:10",
+    "thumbnail": "https://arvinpanjereh.com/upload/service/fcb424ee-71c5-4947-8039-b9994bece476.webp",
+    "description": "کالبدشکافی مقاطع برش‌خورده پروفیل آلومینیوم و بررسی تیغه پلی‌آمید پلی‌آمید ۶۶ با الیاف شیشه در برابر پی‌وی‌سی بازیافتی متفرقه و خطرات اتلاف انرژی."
+  }
+]
