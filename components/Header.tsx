@@ -3,21 +3,12 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Phone, Menu, X, ChevronDown, Building2, Calculator, ShieldCheck, Sparkles } from 'lucide-react';
+import { Phone, Menu, X, ChevronDown, Building2, Calculator, ShieldCheck } from 'lucide-react';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const pathname = usePathname();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     setIsOpen(false);
@@ -28,7 +19,7 @@ export default function Header() {
     { href: '/', label: 'صفحه اصلی' },
     {
       href: '/services',
-      label: 'سیستم‌های نما و پنجره',
+      label: 'نمونه پروفیل‌ها',
       isDropdown: true,
       subItems: [
         { href: '/services/curtain-wall-lamella', label: 'نمای کرتین وال (لامل)' },
@@ -39,41 +30,38 @@ export default function Header() {
         { href: '/services/steel-glass-railings', label: 'نرده شیشه‌ای و حفاظ استیل' },
       ],
     },
-    { href: '/projects', label: 'پروژه‌های شاخص' },
-    { href: '/videos', label: 'ویدیوها', badge: 'آموزشی' },
-    { href: '/calculator', label: 'محاسبه قیمت', isSpecial: true },
-    { href: '/articles', label: 'دانشنامه مهندسی' },
-    { href: '/about', label: 'درباره ما' },
+    { href: '/projects', label: 'پروژه‌ها' },
+    { href: '/videos', label: 'ویدیوها' },
+    { href: '/calculator', label: 'محاسبه قیمت' },
+    { href: '/articles', label: 'مقالات' },
+    { href: '/about', label: 'درباره شرکت' },
     { href: '/contact', label: 'تماس با ما' },
   ];
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-charcoal-950/90 backdrop-blur-xl border-b border-charcoal-800 shadow-2xl py-3'
-          : 'bg-charcoal-950/70 backdrop-blur-md border-b border-white/5 py-4'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-bronze-400 via-bronze-500 to-amber-700 flex items-center justify-center text-charcoal-950 font-black shadow-lg shadow-bronze-500/20 group-hover:scale-105 transition-transform duration-300">
-              <Building2 className="w-6 h-6 text-charcoal-950" />
-            </div>
-            <div>
-              <span className="text-lg sm:text-xl font-black tracking-tight text-white block leading-tight">
-                نوآوران پنجره <span className="gold-gradient-text">سپاهان</span>
-              </span>
-              <span className="text-[9px] text-titanium-400 block tracking-widest uppercase font-mono mt-0.5">
-                Modern Architectural Glass & Facades
-              </span>
-            </div>
-          </Link>
+    <header className="sticky top-2 z-50 mx-2 sm:mx-3 my-2">
+      {/* 
+        Header Bar with:
+        - Aluminum Texture background (#cbcccb)
+        - Sharp 0px corners (no rounded fillet)
+        - Logo on LEFT side
+        - Extremely subtle soft drop shadow
+      */}
+      <div className="aluminum-header subtle-soft-shadow rounded-none px-4 py-3 flex items-center justify-between border border-[#b5b8b5]">
+        
+        {/* RIGHT SIDE: Navigation Links & Mobile Menu Toggle */}
+        <div className="flex items-center gap-4">
+          {/* Mobile Menu Toggle */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden p-2 bg-[#b8bab8] text-[#18191a] hover:bg-[#a3a6a3] rounded-none transition-colors border border-[#9fa29f]"
+            aria-label="منوی اصلی"
+          >
+            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5">
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
             {navLinks.map((link) => {
               const active = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
               if (link.isDropdown) {
@@ -85,8 +73,10 @@ export default function Header() {
                     onMouseLeave={() => setServicesOpen(false)}
                   >
                     <button
-                      className={`flex items-center gap-1 px-3 py-2 text-xs font-bold rounded-lg transition-all ${
-                        active ? 'text-bronze-400 bg-bronze-500/10 border border-bronze-500/20' : 'text-titanium-200 hover:text-white hover:bg-white/5'
+                      className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-extrabold rounded-none transition-all ${
+                        active 
+                          ? 'bg-[#18191a] text-white border border-[#18191a]' 
+                          : 'text-[#18191a] hover:bg-[#b8bab8] border border-transparent'
                       }`}
                     >
                       {link.label}
@@ -94,12 +84,12 @@ export default function Header() {
                     </button>
 
                     {servicesOpen && (
-                      <div className="absolute right-0 top-full mt-1.5 w-64 rounded-2xl bg-charcoal-900 border border-charcoal-700 shadow-2xl p-2.5 space-y-1 animate-in fade-in slide-in-from-top-2 duration-150">
+                      <div className="absolute right-0 top-full mt-1 w-60 aluminum-card subtle-soft-shadow rounded-none p-1.5 space-y-1 z-50">
                         {link.subItems?.map((item) => (
                           <Link
                             key={item.href}
                             href={item.href}
-                            className="block px-3 py-2.5 text-xs text-titanium-200 hover:text-bronze-300 hover:bg-charcoal-800 rounded-xl transition-all"
+                            className="block px-3 py-2 text-xs font-bold text-[#18191a] hover:bg-[#18191a] hover:text-white rounded-none transition-colors"
                           >
                             {item.label}
                           </Link>
@@ -114,115 +104,67 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-3 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-1 relative ${
-                    link.isSpecial
-                      ? 'bg-gradient-to-r from-bronze-500 to-bronze-600 text-charcoal-950 font-black shadow-md shadow-bronze-500/20 hover:scale-105'
-                      : active
-                      ? 'text-bronze-400 bg-bronze-500/10 border border-bronze-500/20'
-                      : 'text-titanium-200 hover:text-white hover:bg-white/5'
+                  className={`px-3 py-1.5 text-xs font-extrabold rounded-none transition-all border ${
+                    active
+                      ? 'bg-[#18191a] text-white border-[#18191a]'
+                      : 'text-[#18191a] hover:bg-[#b8bab8] border-transparent'
                   }`}
                 >
-                  {link.isSpecial && <Calculator className="w-3.5 h-3.5" />}
-                  <span>{link.label}</span>
-                  {link.badge && (
-                    <span className="mr-1 text-[9px] bg-bronze-500/20 text-bronze-300 px-1.5 py-0.5 rounded-full border border-bronze-500/30">
-                      {link.badge}
-                    </span>
-                  )}
+                  {link.label}
                 </Link>
               );
             })}
           </nav>
 
-          {/* Hotline Contact Button */}
-          <div className="hidden sm:flex items-center gap-3">
-            <a
-              href="tel:0314144"
-              className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-charcoal-900 hover:bg-charcoal-850 text-bronze-400 border border-bronze-500/30 shadow-lg transition-all font-mono text-xs tracking-wider group"
-              title="تماس مستقیم با واحد فنی (۴۱۴۴-۰۳۱)"
-            >
-              <div className="w-7 h-7 rounded-lg bg-bronze-500/20 flex items-center justify-center text-bronze-400 group-hover:scale-110 transition-transform">
-                <Phone className="w-3.5 h-3.5" />
-              </div>
-              <div className="text-right">
-                <span className="block text-[9px] text-titanium-400 font-sans">خط ویژه اصفهان</span>
-                <span className="font-extrabold text-sm text-bronze-400">۰۳۱-۴۱۴۴</span>
-              </div>
-            </a>
-          </div>
-
-          {/* Mobile Menu Toggle */}
-          <div className="lg:hidden flex items-center gap-2">
-            <a
-              href="tel:0314144"
-              className="p-2.5 rounded-xl bg-bronze-500/20 text-bronze-400 border border-bronze-500/30"
-              title="تماس تلفنی"
-            >
-              <Phone className="w-5 h-5" />
-            </a>
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2.5 rounded-xl bg-charcoal-850 text-titanium-200 hover:text-white border border-charcoal-700"
-              aria-label="منوی اصلی"
-            >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
+          {/* Phone Hotline Link */}
+          <a
+            href="tel:0314144"
+            className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-[#18191a] text-white text-xs font-bold rounded-none font-mono hover:bg-[#2c2e30] transition-colors border border-[#18191a]"
+          >
+            <Phone className="w-3.5 h-3.5 text-[#cbcccb]" />
+            <span>۰۳۱-۴۱۴۴</span>
+          </a>
         </div>
+
+        {/* LEFT SIDE: Logo & Brand Name */}
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="text-right hidden sm:block">
+            <span className="text-sm font-black text-[#18191a] block leading-tight tracking-tight">
+              نوآوران پنجره سپاهان
+            </span>
+            <span className="text-[9px] text-[#484c50] block tracking-widest uppercase font-mono font-bold">
+              Noavaran Panjereh
+            </span>
+          </div>
+          <div className="w-9 h-9 bg-[#18191a] text-[#cbcccb] flex items-center justify-center rounded-none shadow-sm group-hover:bg-[#2c2e30] transition-colors border border-[#18191a]">
+            <Building2 className="w-5 h-5 text-white" />
+          </div>
+        </Link>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Menu Drawer */}
       {isOpen && (
-        <div className="lg:hidden bg-charcoal-950/95 backdrop-blur-2xl border-b border-charcoal-800 px-5 pt-4 pb-6 space-y-2 animate-in fade-in slide-in-from-top-4 duration-200">
-          {navLinks.map((link) => {
-            if (link.isDropdown) {
-              return (
-                <div key={link.href} className="py-2 border-b border-charcoal-850">
-                  <div className="text-xs font-black text-bronze-400 uppercase tracking-wider mb-2">
-                    {link.label}
-                  </div>
-                  <div className="pr-3 space-y-1.5 border-r-2 border-bronze-500/40">
-                    {link.subItems?.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="block px-3 py-2 text-xs text-titanium-300 hover:text-white hover:bg-charcoal-850 rounded-lg"
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              );
-            }
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`block px-4 py-3 text-xs font-bold rounded-xl transition-all ${
-                  link.isSpecial
-                    ? 'bg-gradient-to-r from-bronze-500 to-amber-500 text-charcoal-950 font-black text-center shadow-lg'
-                    : 'text-titanium-200 hover:text-bronze-400 hover:bg-charcoal-850'
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-          <div className="pt-4 mt-3 border-t border-charcoal-800 flex items-center justify-between">
+        <div className="lg:hidden aluminum-card border border-[#b5b8b5] p-4 space-y-2 mt-1 subtle-soft-shadow">
+          {navLinks.map((link) => (
             <Link
-              href="/admin"
-              className="text-xs text-titanium-400 hover:text-bronze-400 flex items-center gap-1.5 font-medium"
+              key={link.href}
+              href={link.href}
+              className={`block px-3 py-2 text-xs font-bold rounded-none transition-colors border ${
+                pathname === link.href
+                  ? 'bg-[#18191a] text-white border-[#18191a]'
+                  : 'text-[#18191a] hover:bg-[#b8bab8] border-transparent'
+              }`}
             >
-              <ShieldCheck className="w-4 h-4 text-bronze-400" />
-              ورود مدیریت
+              {link.label}
             </Link>
+          ))}
+          <div className="pt-2 border-t border-[#b5b8b5] flex items-center justify-between">
             <a
               href="tel:0314144"
-              className="text-xs text-bronze-400 font-mono font-bold flex items-center gap-1.5"
+              className="text-xs font-mono font-black text-[#18191a] flex items-center gap-1"
             >
               <Phone className="w-3.5 h-3.5" />
-              ۰۳۱-۴۱۴۴
+              تماس: ۰۳۱-۴۱۴۴
             </a>
           </div>
         </div>
