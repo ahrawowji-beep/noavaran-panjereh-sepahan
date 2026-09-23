@@ -6,9 +6,9 @@
 
 :root {
   --font-vazir: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --bg-primary: #14171d;
-  --bg-surface: #1b2028;
-  --bg-card: #222832;
+  --bg-primary: #0c0e12;
+  --bg-surface: #14171d;
+  --bg-card: #1b2028;
   --border-subtle: #2f3846;
   --color-bronze: #c78d22;
   --color-bronze-light: #e6ab41;
@@ -17,28 +17,28 @@
 }
 
 html, body {
-  background-color: #14171d;
+  background-color: #0c0e12;
   color: #f8fafc;
   font-family: var(--font-vazir);
-  overflow-x: clip;
+  overflow-x: hidden;
   min-width: 0;
   scroll-behavior: smooth;
   margin: 0;
   padding: 0;
 }
 
-/* Scrollbar styling */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #14171d;
+  background: #0c0e12;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #2f3846;
+  background: #2a3240;
   border-radius: 4px;
 }
 
@@ -46,11 +46,53 @@ html, body {
   background: #c78d22;
 }
 
-/* Architectural typography */
+/* Typography Defaults */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.02em;
   font-style: normal !important;
+}
+
+/* Glassmorphism & Accent Utilities */
+.glass-panel {
+  background: rgba(27, 32, 40, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #f5dda8 0%, #e6ab41 50%, #c78d22 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.glow-border {
+  position: relative;
+}
+
+.glow-border::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(230, 171, 65, 0.4), transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.hero-grid-pattern {
+  background-image: linear-gradient(to right, rgba(47, 56, 70, 0.25) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(47, 56, 70, 0.25) 1px, transparent 1px);
+  background-size: 3.5rem 3.5rem;
+}
+
+.architectural-shadow {
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.7), 0 0 30px -5px rgba(199, 141, 34, 0.1);
 }
 
 /* Guardrails for WebKit images in RTL */
