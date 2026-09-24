@@ -20,7 +20,7 @@ export default async function HomePage() {
   const articles = await getArticles();
 
   return (
-    <div className="space-y-8 pb-16 bg-[#F5F5F5] text-[#18191a]">
+    <div className="space-y-8 pb-16 text-white">
       {/* 
         ====================================================
         MAIN LAYOUT: MATCHING MOCKUP 1 (EXACT STRUCTURE IN PERSIAN)
